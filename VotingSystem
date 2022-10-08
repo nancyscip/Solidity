@@ -1,0 +1,101 @@
+//SPDX-License-Identifier: MIT
+
+pragma solidity ^0.8.0;
+
+error NotOwner();
+
+contract VotingSystem{
+    
+    address public OWNER;
+    mapping(address => bool) internal ElectionCommittee;
+    mapping(address => Voters) public Voter;
+
+    struct candidates{
+        string name;
+        string party;
+        uint256 votes;
+    }
+
+    candidates[] public ListOfCandidates;
+
+    struct Voters{
+        uint256 CandidateChosenIndex;
+        bool registeredVote;
+        bool canVote;
+    }
+
+    struct VotingTime{
+        uint startTime; 
+        uint endTime; 
+    }
+
+        VotingTime public vT;
+
+        bool BallotBoxAdressEnable = false;
+
+    constructor(string[] memory Candidates, string[] memory Parties) {
+        OWNER = msg.sender;
+        ElectionCommittee[OWNER] = true;
+        for (uint i = 0; i < Candidates.length; i++) {
+            ListOfCandidates.push(candidates({
+                name: Candidates[i],
+                party: Parties[i],
+                votes: 0
+            }));
+        }
+    }
+
+        modifier onlyOwner {
+        if( msg.sender != OWNER) { revert NotOwner();}
+        _;
+    }
+
+        function AppointMemberOfElectionCommittee(address Member) public onlyOwner {
+        ElectionCommittee[Member] = true;
+    }
+
+        function StartVoting() public onlyOwner{ 
+        vT.startTime = block.timestamp; 
+        
+    }
+
+    function FinishVoting() public onlyOwner{
+        vT.endTime = block.timestamp; 
+        BallotBoxAdressEnable = false; 
+    }
+
+
+    function Vote(uint256 ChosenIndex) public {
+        Voters storage _voters = Voter[msg.sender];
+        require(_voters.canVote == true , "You don't have right to vote, request from any member of Election Committee");
+        require(_voters.registeredVote == false , "You have voted already!");
+        _voters.registeredVote = true;
+        _voters.CandidateChosenIndex = ChosenIndex;
+        ListOfCandidates[ChosenIndex].votes+=1;
+    }
+
+    function giveVotingRights(address _voters) public {
+        require(ElectionCommittee[msg.sender] == true , "Only Member of Election Committee can give voting rights!");
+        require(Voter[_voters].registeredVote == false, "This person has already voted!");
+        Voter[_voters].canVote = true;
+    }
+
+
+    function findWinner() internal view returns(uint){
+        uint WinningIndex;
+        uint256 max; 
+        for(uint i=0; i< ListOfCandidates.length; i++){
+            if(ListOfCandidates[i].votes > max){
+                WinningIndex = i;
+                max = ListOfCandidates[i].votes;
+            }
+        }
+        return WinningIndex;
+    }
+
+    function WinnerName() external view returns (string memory winner) {
+        winner = ListOfCandidates[findWinner()].name;
+    }
+
+
+}
