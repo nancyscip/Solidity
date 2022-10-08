@@ -1,4 +1,4 @@
-#**_Voting System en Solidity_**
+# **_Voting System en Solidity_**
 
 # **_Smart Contract de sistema de votaciones creado en lenguaje Solidity._**
 
