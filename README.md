@@ -8,7 +8,7 @@
 
 ## Tecnologías utilizadas:
 
-* Remix IDE 0.27.0 (https://remix.ethereum.org) Utilizado para escribir el código, probarlo y deployarlo de manera local y el la red de prueba de Goerli.
+* Remix IDE 0.27.0 (https://remix.ethereum.org) Utilizado para escribir el código, probarlo y deployarlo de manera local y en la red de prueba de Goerli.
 * Lenguaje Solidity (https://soliditylang.org/) Utilizado para realizar el código del Smart Contract. Actualmente la versión de este lenguaje es la v0.8.17. Nosotras hemos trabajado sobre la versión 0.8.0 por tema de mayor compatibilidad.
 * Metamask virtual wallet (https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn) Extensión del navegador Chrome compatible con Edge. 
 * Red de prueba de Goerli
